@@ -10,11 +10,12 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button choice1Button, choice2Button, choice3Button, playAgainButton, resetStatsButton;
+    private Button choice1Button, choice2Button, choice3Button;
     private TextView statisticsTextView;
     private TextView statusTextView;
 
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         choice2Button =  setupButton(R.id.choice2button, 2);
         choice3Button = setupButton( R.id.choice3button, 3);
 
-        playAgainButton = findViewById(R.id.new_game_button);
-        resetStatsButton = findViewById(R.id.reset_stats_button);
+        Button playAgainButton = findViewById(R.id.new_game_button);
+        Button resetStatsButton = findViewById(R.id.reset_stats_button);
         statisticsTextView = findViewById(R.id.statistics_text);
         statusTextView = findViewById(R.id.statusText);
         setOnClickListenerFor(choice1Button, choice2Button, choice3Button, playAgainButton, resetStatsButton);
@@ -61,22 +62,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onClick(View v){
-        switch(v.getId()){
-            case R.id.choice1button:
-                selectChoice(choice1Button);
-                break;
-            case R.id.choice2button:
-                selectChoice(choice2Button);
-                break;
-            case R.id.choice3button:
-                selectChoice(choice3Button);
-                break;
-            case R.id.new_game_button:
-                startNewGame();
-                break;
-            case R.id.reset_stats_button:
-                resetStats();
-
+        int id = v.getId();
+        if(id == R.id.choice1button){
+            selectChoice(choice1Button);
+        }
+        else if(id == R.id.choice2button){
+            selectChoice(choice2Button);
+        }
+        else if(id == R.id.choice3button){
+            selectChoice(choice3Button);
+        }
+        else if(id == R.id.new_game_button) {
+            startNewGame();
+        }
+        else if(id == R.id.reset_stats_button){
+            resetStats();
         }
     }
 
@@ -95,10 +95,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     private void assignPrizeIndex(){
-        prizeNumber = ThreadLocalRandom.current().nextInt(1,3);
+        prizeNumber = 1 + new Random(System.currentTimeMillis()).nextInt(3);
     }
+
 
     private void selectChoice(Button button){
         if( mode == Mode.SELECT_CHOICE){
@@ -117,9 +117,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     private void reduceChoices(){
-        List<Button> choices = new LinkedList<Button>(Arrays.asList(choice1Button, choice2Button, choice3Button));
+        List<Button> choices = new LinkedList<>(Arrays.asList(choice1Button, choice2Button, choice3Button));
         for(int i =0; i< choices.size(); i++){
             Button button = choices.get(i);
             if((int)button.getTag() == selectedNumber){
@@ -129,20 +128,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if(selectedNumber == prizeNumber){
-            int buttonIndexToDisable = ThreadLocalRandom.current().nextInt(1);
+            int buttonIndexToDisable = new Random(System.currentTimeMillis()).nextInt(2);
             Button button = choices.get(buttonIndexToDisable);
             button.setEnabled(false);
             return;
         }
-        for(int i = 0; i< choices.size(); i++){
-            Button button = choices.get(i);
-            if((int)button.getTag() == prizeNumber){
-                continue;
+        disableButtonsThatDontContainPrize(choices);
+    }
+
+
+    private void disableButtonsThatDontContainPrize(List<Button> buttonList){
+        for(int i = 0; i< buttonList.size(); i++){
+            Button button = buttonList.get(i);
+            if((int)button.getTag() != prizeNumber){
+                button.setEnabled(false);
             }
-            button.setEnabled(false);
         }
-
-
     }
 
 

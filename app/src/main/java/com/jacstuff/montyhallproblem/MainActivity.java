@@ -18,12 +18,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button choice1Button, choice2Button, choice3Button;
     private TextView statisticsTextView;
     private TextView statusTextView;
-
-    private enum Mode { SELECT_CHOICE, CONFIRM_CHOICE, RESULT}
-
+    private Statistics statistics;
     private Mode mode;
     private int prizeNumber = 1;
     private int selectedNumber = 0;
+    private enum Mode { SELECT_CHOICE, CONFIRM_CHOICE, RESULT}
 
 
     @Override
@@ -37,17 +36,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void initViews(){
-
         choice1Button = setupButton(R.id.choice1button, 1);
         choice2Button =  setupButton(R.id.choice2button, 2);
         choice3Button = setupButton( R.id.choice3button, 3);
-
         Button playAgainButton = findViewById(R.id.new_game_button);
         Button resetStatsButton = findViewById(R.id.reset_stats_button);
         statisticsTextView = findViewById(R.id.statistics_text);
         statusTextView = findViewById(R.id.statusText);
-        setOnClickListenerFor(choice1Button, choice2Button, choice3Button, playAgainButton, resetStatsButton);
+        setOnClickListeners();
+        setOnClickListenerFor(playAgainButton, resetStatsButton);
     }
+
+
+    private void setOnClickListeners(){
+        choice1Button.setOnClickListener(this::selectChoice);
+        choice2Button.setOnClickListener(this::selectChoice);
+        choice3Button.setOnClickListener(this::selectChoice);
+    }
+
 
     private Button setupButton(int id, int tagValue){
         Button button = findViewById(id);
@@ -55,30 +61,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return button;
     }
 
+
     private void setOnClickListenerFor(View ... views){
         for(View v : views){
             v.setOnClickListener(this);
         }
     }
 
+
     public void onClick(View v){
         int id = v.getId();
-        if(id == R.id.choice1button){
-            selectChoice(choice1Button);
-        }
-        else if(id == R.id.choice2button){
-            selectChoice(choice2Button);
-        }
-        else if(id == R.id.choice3button){
-            selectChoice(choice3Button);
-        }
-        else if(id == R.id.new_game_button) {
+      if(id == R.id.new_game_button) {
             startNewGame();
         }
         else if(id == R.id.reset_stats_button){
             resetStats();
         }
     }
+
 
     private void startNewGame(){
         assignPrizeIndex();
@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mode = Mode.SELECT_CHOICE;
     }
 
-    private Statistics statistics;
 
     private void resetStats(){
         statistics.reset();
@@ -100,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void selectChoice(Button button){
+    private void selectChoice(View view){
+        Button button = (Button) view;
         if( mode == Mode.SELECT_CHOICE){
             if(button.isEnabled()){
                 selectedNumber = (int) button.getTag();
@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
         }
-
         if(selectedNumber == prizeNumber){
             int buttonIndexToDisable = new Random(System.currentTimeMillis()).nextInt(2);
             Button button = choices.get(buttonIndexToDisable);
@@ -165,28 +164,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         statisticsTextView.setText(msg);
     }
 
+
     private void displayWinMessage(){
         statusTextView.setText(R.string.success_status_text);
     }
+
 
     private void displayLoseMessage(){
         statusTextView.setText(R.string.fail_status_text);
     }
 
+
     private void resetStatusText(){
         statusTextView.setText(R.string.initial_status_text);
     }
+
 
     private void displayConfirmChoiceText(){
         statusTextView.setText(R.string.confirm_choice_status_text);
     }
 
+
     private void resetChoiceButtons(){
         reset(choice1Button);
         reset(choice2Button);
         reset(choice3Button);
-
     }
+
 
     private void reset(Button button){
         button.setEnabled(true);

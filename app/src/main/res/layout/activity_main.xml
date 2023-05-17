@@ -7,17 +7,63 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:id="@+id/choicebuttonlayout"
-        android:layout_width="409dp"
-        android:layout_height="306dp"
+        android:id="@+id/doorsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/door_layout_margin"
+        android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/statusText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <LinearLayout
+            android:id="@+id/door1Border"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/door_border_margin">
+
+            <ImageView
+                android:id="@+id/door1"
+                android:layout_width="50dp"
+                android:layout_height="100dp"
+                android:layout_margin="@dimen/door_layout_margin"
+                android:src="@drawable/door" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/door2Border"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/door_border_margin">
+
+            <ImageView
+                android:id="@+id/door2"
+                android:layout_width="50dp"
+                android:layout_height="100dp"
+                android:layout_margin="@dimen/door_layout_margin"
+                android:src="@drawable/door" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/door3Border"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/door_border_margin">
+
+            <ImageView
+                android:id="@+id/door3"
+                android:layout_width="50dp"
+                android:layout_height="100dp"
+                android:layout_margin="@dimen/door_layout_margin"
+                android:src="@drawable/door" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/choice1button"
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -26,6 +72,7 @@
 
         <Button
             android:id="@+id/choice2button"
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -34,6 +81,7 @@
 
         <Button
             android:id="@+id/choice3button"
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -48,7 +96,7 @@
         android:layout_height="wrap_content"
         android:text="@string/initial_status_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/choicebuttonlayout"
+        app:layout_constraintTop_toBottomOf="@id/doorsLayout"
         app:layout_constraintBottom_toTopOf="@id/new_game_button"
         app:layout_constraintStart_toStartOf="parent" />
 

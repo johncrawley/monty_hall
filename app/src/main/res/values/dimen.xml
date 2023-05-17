@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="door_layout_margin">6dp</dimen>
+    <dimen name="door_margin_horizontal">3dp</dimen>
+    <dimen name="door_border_margin">8dp</dimen>
+</resources>

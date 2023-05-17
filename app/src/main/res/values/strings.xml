@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MontyHallProblem</string>
+    <string name="app_name">The Monty Hall Problem</string>
     <string name="question_mark">\?</string>
     <string name="initial_status_text">Please select a choice</string>
     <string name="confirm_choice_status_text">Confirm your choice..</string>

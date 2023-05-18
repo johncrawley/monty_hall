@@ -12,25 +12,25 @@ public class Statistics {
         gamesWon++;
     }
 
-    void addGameWon(boolean wasChoiceKept){
+    void addGameWon(boolean wasChoiceSwitched){
         gamesPlayed++;
-        if(wasChoiceKept){
-            gamesPlayedWithKeepChoice++;
-            gamesWonWithKeepChoice++;
+        if(wasChoiceSwitched){
+            gamesPlayedWithSwitchChoice++;
+            gamesWonWithSwitchChoice++;
             return;
         }
-        gamesPlayedWithSwitchChoice++;
-        gamesWonWithSwitchChoice++;
+        gamesPlayedWithKeepChoice++;
+        gamesWonWithKeepChoice++;
     }
 
 
-    void addGameLost(boolean wasChoiceKept){
+    void addGameLost(boolean wasChoiceSwitched){
         gamesPlayed++;
-        if(wasChoiceKept){
-            gamesPlayedWithKeepChoice++;
+        if(wasChoiceSwitched){
+            gamesPlayedWithSwitchChoice++;
             return;
         }
-        gamesPlayedWithSwitchChoice++;
+        gamesPlayedWithKeepChoice++;
     }
 
 

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private Statistics statistics;
     private Mode mode;
     private int prizeNumber = 1;
-    private int selectedNumber = 0;
+    private int selectedDoorNumber = 0;
     private enum Mode { SELECT_CHOICE, CONFIRM_CHOICE, RESULT}
     private List<View> doorBorders;
 
@@ -107,18 +107,24 @@ public class MainActivity extends AppCompatActivity {
         prizeNumber = 1 + new Random(System.currentTimeMillis()).nextInt(3);
     }
 
+    boolean hasSelectionSwitched;
 
     private void selectChoice(View view){
         if( mode == Mode.SELECT_CHOICE){
+            hasSelectionSwitched = false;
             if(view.isEnabled()){
-                selectedNumber = (int) view.getTag();
+                selectedDoorNumber = (int) view.getTag();
                 mode = Mode.CONFIRM_CHOICE;
                 displayConfirmChoiceText();
                 reduceChoices();
             }
         }
         else if( mode == Mode.CONFIRM_CHOICE){
-            selectedNumber = (int)view.getTag();
+            int newSelection = (int)view.getTag();
+            if(newSelection != selectedDoorNumber){
+                hasSelectionSwitched = true;
+            }
+            selectedDoorNumber = newSelection;
             if(prizeNumber == (int)view.getTag()){
                 changeDoorToPrize(view);
             }
@@ -149,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
         removeDoorSelectedByUserFrom(doors);
 
-        if(selectedNumber == prizeNumber){
+        if(selectedDoorNumber == prizeNumber){
             openOneOfTheOtherDoors(doors);
             return;
         }
@@ -167,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void removeDoorSelectedByUserFrom(List<View> choices){
         for(int i =0; i< choices.size(); i++){
-            if((int)choices.get(i).getTag() == selectedNumber){
+            if((int)choices.get(i).getTag() == selectedDoorNumber){
                 choices.remove(i);
                 break;
             }
@@ -186,20 +192,24 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void calculateAndDisplayResult(){
-        if(selectedNumber == prizeNumber){
+        if(selectedDoorNumber == prizeNumber){
             displayWinMessage();
             statistics.addGameWon();
+            statistics.addGameWon(hasSelectionSwitched);
+
             updateStatisticsView();
             return;
         }
         displayLoseMessage();
         statistics.addGameLost();
+        statistics.addGameLost(hasSelectionSwitched);
         updateStatisticsView();
     }
 
 
     private void updateStatisticsView(){
-        String msg = " Success : " + statistics.getGamesWon() + " / " + statistics.getGamesPlayed();
+        String msg = "Success after switching choice: " + statistics.getSwitchChoiceStats()
+                + "\n Success after keeping choice: " + statistics.getKeepChoiceStats();
         statisticsTextView.setText(msg);
     }
 

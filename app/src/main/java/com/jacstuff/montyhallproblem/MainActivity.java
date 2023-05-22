@@ -2,24 +2,24 @@ package com.jacstuff.montyhallproblem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private View door1, door2, door3;
+    private List<View> doors;
     private View door1Border, door2Border, door3Border;
-    private Button playAgainButton;
+    private List<View> doorBorders;
+    private Button playAgainButton, resetStatsButton;
     private TextView statisticsTextView;
     private TextView statusTextView;
     private Statistics statistics;
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private int prizeNumber = 1;
     private int selectedDoorNumber = 0;
     private enum Mode { SELECT_CHOICE, CONFIRM_CHOICE, RESULT}
-    private List<View> doorBorders;
+    boolean hasSelectionSwitched;
 
 
     @Override
@@ -41,30 +41,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews(){
+        initDoorBorders();
+        initDoors();
 
-        door1Border = findViewById(R.id.door1Border);
-        door2Border = findViewById(R.id.door2Border);
-        door3Border = findViewById(R.id.door3Border);
-        doorBorders = Arrays.asList(door1Border, door2Border, door3Border);
-        deselectAllBorders();
-
-        door1 = setupDoor(R.id.door1, door1Border, 1);
-        door2 = setupDoor(R.id.door2, door2Border, 2);
-        door3 = setupDoor(R.id.door3, door3Border, 3);
-
-
-
-        playAgainButton = findViewById(R.id.new_game_button);
-        playAgainButton.setOnClickListener(v -> startNewGame());
-        Button resetStatsButton = findViewById(R.id.reset_stats_button);
-        resetStatsButton.setOnClickListener(v -> resetStats());
+        playAgainButton = setupButton(R.id.new_game_button, this::startNewGame);
+        resetStatsButton = setupButton(R.id.reset_stats_button, this::resetStats);
         statisticsTextView = findViewById(R.id.statistics_text);
         statusTextView = findViewById(R.id.statusText);
     }
 
 
-    private void deselectAllBorders(){
-        doorBorders.forEach(v -> v.setBackgroundColor(getColor(R.color.backgroundColor)));
+    private void initDoorBorders(){
+        door1Border = findViewById(R.id.door1Border);
+        door2Border = findViewById(R.id.door2Border);
+        door3Border = findViewById(R.id.door3Border);
+        doorBorders = Arrays.asList(door1Border, door2Border, door3Border);
+        deselectAllBorders();
+    }
+
+
+    private void initDoors(){
+        doors = new ArrayList<>(3);
+        doors.add(setupDoor(R.id.door1, door1Border, 1));
+        doors.add(setupDoor(R.id.door2, door2Border, 2));
+        doors.add(setupDoor(R.id.door3, door3Border, 3));
     }
 
 
@@ -76,15 +76,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private Button setupButton(int buttonId, Runnable runnable){
+        Button button = findViewById(buttonId);
+        button.setOnClickListener((v)->runnable.run());
+        return button;
+    }
+
+
     private void onClickDoor(ImageView doorView, View borderView){
         setSelected(borderView);
-        selectChoice(doorView);
+        selectDoor(doorView);
     }
 
 
     private void setSelected(View borderView){
         deselectAllBorders();
-        borderView.setBackgroundColor(Color.BLUE);
+        borderView.setBackgroundColor(getColor(R.color.selectedDoorBorder));
     }
 
 
@@ -99,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void resetStats(){
         statistics.reset();
+        resetStatsButton.setVisibility(View.INVISIBLE);
         updateStatisticsView();
     }
 
@@ -107,54 +115,65 @@ public class MainActivity extends AppCompatActivity {
         prizeNumber = 1 + new Random(System.currentTimeMillis()).nextInt(3);
     }
 
-    boolean hasSelectionSwitched;
 
-    private void selectChoice(View view){
-        if( mode == Mode.SELECT_CHOICE){
-            hasSelectionSwitched = false;
-            if(view.isEnabled()){
-                selectedDoorNumber = (int) view.getTag();
-                mode = Mode.CONFIRM_CHOICE;
-                displayConfirmChoiceText();
-                reduceChoices();
-            }
-        }
-        else if( mode == Mode.CONFIRM_CHOICE){
-            int newSelection = (int)view.getTag();
-            if(newSelection != selectedDoorNumber){
-                hasSelectionSwitched = true;
-            }
-            selectedDoorNumber = newSelection;
-            if(prizeNumber == (int)view.getTag()){
-                changeDoorToPrize(view);
-            }
-            else{
-                changeDoorToFail(view);
-            }
-            mode = Mode.RESULT;
-            calculateAndDisplayResult();
-            playAgainButton.setVisibility(View.VISIBLE);
+    private void selectDoor(View view){
+        switch (mode){
+            case SELECT_CHOICE: initialChoice(view);break;
+            case CONFIRM_CHOICE: confirmChoice(view);break;
+            case RESULT: break;
         }
     }
 
 
-    private void changeDoorToPrize(View view){
+    private void initialChoice(View view){
+        hasSelectionSwitched = false;
+        if(view.isEnabled()){
+            selectedDoorNumber = (int) view.getTag();
+            mode = Mode.CONFIRM_CHOICE;
+            displayConfirmChoiceText();
+            reduceChoices();
+        }
+    }
+
+
+    private void confirmChoice(View view){
+        int newSelection = (int)view.getTag();
+        if(newSelection != selectedDoorNumber){
+            hasSelectionSwitched = true;
+        }
+        selectedDoorNumber = newSelection;
+        openDoor(view);
+        calculateAndDisplayResult();
+        playAgainButton.setVisibility(View.VISIBLE);
+        setDoorsEnabled(false);
+    }
+
+
+    private void openDoor(View view){
+        if(prizeNumber == (int)view.getTag()){
+            changeImageToPrize(view);
+        }
+        else{
+            changeImageToGoat(view);
+        }
+    }
+
+
+    private void changeImageToPrize(View view){
         ImageView iv = (ImageView)view;
         iv.setImageResource(R.drawable.door_car);
     }
 
 
-    private void changeDoorToFail(View view){
+    private void changeImageToGoat(View view){
         ImageView iv = (ImageView)view;
         iv.setImageResource(R.drawable.door_goat);
     }
 
 
     private void reduceChoices(){
-        List<View> doors = new LinkedList<>(Arrays.asList(door1, door2, door3));
-
+        List<View> doors = new ArrayList<>(this.doors);
         removeDoorSelectedByUserFrom(doors);
-
         if(selectedDoorNumber == prizeNumber){
             openOneOfTheOtherDoors(doors);
             return;
@@ -167,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         int viewIndexToDisable = new Random(System.currentTimeMillis()).nextInt(2);
         View doorToOpen = doors.get(viewIndexToDisable);
         doorToOpen.setEnabled(false);
-        changeDoorToFail(doorToOpen);
+        changeImageToGoat(doorToOpen);
     }
 
 
@@ -185,18 +204,18 @@ public class MainActivity extends AppCompatActivity {
         views.forEach((v)->{
             if((int)v.getTag() != prizeNumber){
                 v.setEnabled(false);
-                changeDoorToFail(v);
+                changeImageToGoat(v);
             }
         } );
     }
 
 
     private void calculateAndDisplayResult(){
+        mode = Mode.RESULT;
         if(selectedDoorNumber == prizeNumber){
             displayWinMessage();
             statistics.addGameWon();
             statistics.addGameWon(hasSelectionSwitched);
-
             updateStatisticsView();
             return;
         }
@@ -211,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
         String msg = "Success after switching choice: " + statistics.getSwitchChoiceStats()
                 + "\n Success after keeping choice: " + statistics.getKeepChoiceStats();
         statisticsTextView.setText(msg);
+        resetStatsButton.setVisibility(View.VISIBLE);
     }
 
 
@@ -236,13 +256,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void resetDoors(){
         deselectAllBorders();
-        reset(door1);
-        reset(door2);
-        reset(door3);
+        doors.forEach(this::resetDoor);
+        setDoorsEnabled(true);
     }
 
 
-    private void reset(View view){
+    private void deselectAllBorders(){
+        doorBorders.forEach(v -> v.setBackgroundColor(getColor(R.color.backgroundColor)));
+    }
+
+
+    private void setDoorsEnabled(boolean enabled){
+        doors.forEach(door -> door.setEnabled(enabled));
+    }
+
+
+    private void resetDoor(View view){
         view.setEnabled(true);
         ImageView iv = (ImageView)view;
         iv.setImageResource(R.drawable.door);

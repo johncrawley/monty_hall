@@ -12,8 +12,16 @@ public class Statistics {
         gamesWon++;
     }
 
-    void addGameWon(boolean wasChoiceSwitched){
+    public void addGameResult(boolean wasGameWon, boolean wasChoiceSwitched){
         gamesPlayed++;
+        if(wasGameWon){
+            addGameWon(wasChoiceSwitched);
+            return;
+        }
+        addGameLost(wasChoiceSwitched);
+    }
+
+    void addGameWon(boolean wasChoiceSwitched){
         if(wasChoiceSwitched){
             gamesPlayedWithSwitchChoice++;
             gamesWonWithSwitchChoice++;
@@ -25,7 +33,6 @@ public class Statistics {
 
 
     void addGameLost(boolean wasChoiceSwitched){
-        gamesPlayed++;
         if(wasChoiceSwitched){
             gamesPlayedWithSwitchChoice++;
             return;

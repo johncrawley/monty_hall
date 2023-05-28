@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/initial_status_text"
+        android:lines="2"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
         android:id="@+id/doorsLayout"
         android:layout_width="match_parent"
@@ -13,35 +27,42 @@
         android:layout_margin="@dimen/door_layout_margin"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/statusText"
+        android:weightSum="100"
+        app:layout_constraintBottom_toTopOf="@+id/new_game_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/statusText">
 
         <LinearLayout
             android:id="@+id/door1Border"
-            android:layout_width="wrap_content"
+            android:layout_weight="33"
+            android:layout_width="0dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/door_border_margin">
 
             <ImageView
                 android:id="@+id/door1"
-                android:layout_width="50dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/door_layout_margin"
+                android:scaleType="fitCenter"
                 android:src="@drawable/door" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/door2Border"
-            android:layout_width="wrap_content"
+            android:layout_weight="33"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/door_border_margin">
 
             <ImageView
                 android:id="@+id/door2"
-                android:layout_width="50dp"
-                android:layout_height="100dp"
+                android:padding="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/door_layout_margin"
                 android:src="@drawable/door" />
         </LinearLayout>
@@ -49,29 +70,22 @@
 
         <LinearLayout
             android:id="@+id/door3Border"
-            android:layout_width="wrap_content"
+            android:layout_weight="33"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/door_border_margin">
 
             <ImageView
                 android:id="@+id/door3"
-                android:layout_width="50dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/door_layout_margin"
                 android:src="@drawable/door" />
         </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/initial_status_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/doorsLayout"
-        app:layout_constraintBottom_toTopOf="@id/new_game_button"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/new_game_button"
@@ -79,15 +93,106 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:text="@string/play_again_button_text"
-        app:layout_constraintBottom_toTopOf="@+id/reset_stats_button"
+        app:layout_constraintBottom_toTopOf="@+id/stats_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusText" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+
+
+    <LinearLayout
+        android:id="@+id/stats_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <LinearLayout
+            android:id="@+id/keep_stats_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/keep_stats_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/keep_stats_heading"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <TextView
+                android:id="@+id/keep_stat_wins_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/initial_stats"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/switch_stats_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/switch_stats_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/switch_stats_heading"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <TextView
+                android:id="@+id/switch_stat_wins_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/initial_stats"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:textSize="26sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
 
     <TextView
         android:id="@+id/statistics_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="@string/initial_statistics_text"
         app:layout_constraintBottom_toTopOf="@+id/reset_stats_button"
         app:layout_constraintEnd_toEndOf="parent"

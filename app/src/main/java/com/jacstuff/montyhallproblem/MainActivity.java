@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private View door1Border, door2Border, door3Border;
     private List<View> doorBorders;
     private Button playAgainButton, resetStatsButton;
-    private TextView statisticsTextView;
+    private TextView statisticsTextView, keptChoiceStatsTextView, switchedChoiceStatsTextView;
     private TextView statusTextView;
     private MontyHallGame montyHallGame;
 
@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         playAgainButton = setupButton(R.id.new_game_button, this::startNewGame);
         resetStatsButton = setupButton(R.id.reset_stats_button, this::resetStats);
         statisticsTextView = findViewById(R.id.statistics_text);
+        keptChoiceStatsTextView = findViewById(R.id.keep_stat_wins_text);
+        switchedChoiceStatsTextView = findViewById(R.id.switch_stat_wins_text);
         statusTextView = findViewById(R.id.statusText);
     }
 
@@ -114,13 +116,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void openDoor(int doorIndex, boolean containsPrize){
         View door = doors.get(doorIndex);
+        door.setEnabled(false);
         if(containsPrize){
             changeImageToPrize(door);
+            return;
         }
-        else{
-            changeImageToGoat(door);
-        }
-        door.setEnabled(false);
+        changeImageToGoat(door);
     }
 
 
@@ -138,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void updateStatistics(String switchChoiceStats, String keepChoiceStats){
         String msg = "Success after switching choice: " + switchChoiceStats
                 + "\n Success after keeping choice: " + keepChoiceStats;
+        keptChoiceStatsTextView.setText(keepChoiceStats);
+        switchedChoiceStatsTextView.setText(switchChoiceStats);
         statisticsTextView.setText(msg);
         resetStatsButton.setVisibility(View.VISIBLE);
     }
@@ -170,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
-
     @Override
     public void disableDoorAtIndex(int index) {
         doors.get(index).setEnabled(false);
@@ -194,12 +196,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
-
     private void resetDoor(View view){
         view.setEnabled(true);
         ImageView iv = (ImageView)view;
         iv.setImageResource(R.drawable.door);
     }
-
 
 }

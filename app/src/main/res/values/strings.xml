@@ -10,5 +10,8 @@
     <string name="initial_statistics_text">No statistics yet</string>
     <string name="keep_stats_heading">Choice Kept</string>
     <string name="switch_stats_heading">Choice Switched</string>
+    <string name="door_1_content_description">Door 1</string>
+    <string name="door_2_content_description">Door 2</string>
+    <string name="door_3_content_description">Door 3</string>
     <string name="initial_stats">0/0</string>
 </resources>

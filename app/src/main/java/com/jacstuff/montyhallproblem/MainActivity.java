@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,9 +20,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private View door1Border, door2Border, door3Border;
     private List<View> doorBorders;
     private Button playAgainButton, resetStatsButton;
-    private TextView statisticsTextView, keptChoiceStatsTextView, switchedChoiceStatsTextView;
+    private TextView keptChoiceStatsTextView, switchedChoiceStatsTextView;
     private TextView statusTextView;
     private MontyHallGame montyHallGame;
+    private final int numberOfDoors = 3;
+    private int doorWidth, doorHeight;
+    private LinearLayout doorsLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +33,31 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setContentView(R.layout.activity_main);
         montyHallGame = new MontyHallGame(this);
         initViews();
+
     }
 
 
     private void initViews(){
         initDoorBorders();
         initDoors();
+        doorsLayout = findViewById(R.id.doorsLayout);
+        areDoorDimensionsCalculated = false;
+        initDoorDimensions();
         playAgainButton = setupButton(R.id.new_game_button, this::startNewGame);
         resetStatsButton = setupButton(R.id.reset_stats_button, this::resetStats);
-        statisticsTextView = findViewById(R.id.statistics_text);
         keptChoiceStatsTextView = findViewById(R.id.keep_stat_wins_text);
         switchedChoiceStatsTextView = findViewById(R.id.switch_stat_wins_text);
         statusTextView = findViewById(R.id.statusText);
+    }
+
+    private void initDoorDimensions(){
+        doorsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                doorsLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                setDimensionsOnDoors();
+            }
+        });
     }
 
 
@@ -134,15 +152,42 @@ public class MainActivity extends AppCompatActivity implements MainView {
         displayLoseMessage();
     }
 
+    private boolean areDoorDimensionsCalculated;
 
     @Override
     public void updateStatistics(String switchChoiceStats, String keepChoiceStats){
-        String msg = "Success after switching choice: " + switchChoiceStats
-                + "\n Success after keeping choice: " + keepChoiceStats;
         keptChoiceStatsTextView.setText(keepChoiceStats);
         switchedChoiceStatsTextView.setText(switchChoiceStats);
-        statisticsTextView.setText(msg);
         resetStatsButton.setVisibility(View.VISIBLE);
+    }
+
+
+    private void setDimensionsOnDoors(){
+        setDoorDimensions();
+    }
+
+    private void setDoorDimensions(){
+        log("^^^ setDimensionsOnDoors()");
+
+        calculateCardAndGridDimensions(doorsLayout.getWidth(),  doorsLayout.getHeight());
+        log("doorsLayout width and height: " + doorsLayout.getWidth() + "," + doorsLayout.getHeight());
+        log("door width and height: " + doorWidth + ", " + doorHeight);
+        for(View door : doors){
+            door.setLayoutParams(new LinearLayout.LayoutParams(doorWidth, doorHeight));
+        }
+       // doorsLayout.setLayoutParams(new LinearLayout.LayoutParams(doorsLayout.getWidth(), doorHeight + 30));
+    }
+
+    private void calculateCardAndGridDimensions(int parentWidth, int parentHeight){
+        float parentArea = parentWidth * parentHeight;
+        float maxAreaPerCard = parentArea / numberOfDoors;
+        int spacing = 20;
+        doorWidth = (int)Math.floor(Math.sqrt(maxAreaPerCard/ 2f)) - spacing;
+        doorHeight = (int)(doorWidth * 1.5);
+    }
+
+    private void log(String msg){
+        System.out.println("^^^ MainActivity: " + msg);
     }
 
 

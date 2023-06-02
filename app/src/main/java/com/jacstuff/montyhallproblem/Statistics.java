@@ -7,10 +7,6 @@ public class Statistics {
     private int gamesPlayedWithKeepChoice, gamesWonWithKeepChoice;
     private int gamesPlayedWithSwitchChoice, gamesWonWithSwitchChoice;
 
-    void addGameWon(){
-        gamesPlayed++;
-        gamesWon++;
-    }
 
     public void addGameResult(boolean wasGameWon, boolean wasChoiceSwitched){
         gamesPlayed++;
@@ -41,11 +37,6 @@ public class Statistics {
     }
 
 
-    void addGameLost(){
-        gamesPlayed++;
-        gamesLost++;
-    }
-
     void reset(){
         gamesPlayed = 0;
         gamesWon = 0;
@@ -57,14 +48,6 @@ public class Statistics {
     }
 
 
-    int getGamesPlayed(){
-        return gamesPlayed;
-    }
-
-    int getGamesWon(){
-        return gamesWon;
-    }
-
     String getKeepChoiceStats(){
         return gamesWonWithKeepChoice + " / " + gamesPlayedWithKeepChoice;
     }
@@ -74,7 +57,4 @@ public class Statistics {
         return gamesWonWithSwitchChoice + " / " + gamesPlayedWithSwitchChoice;
     }
 
-    int getGamesLost(){
-        return gamesLost;
-    }
 }

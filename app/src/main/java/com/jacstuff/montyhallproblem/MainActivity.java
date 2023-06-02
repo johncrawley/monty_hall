@@ -1,6 +1,8 @@
 package com.jacstuff.montyhallproblem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.view.View;
@@ -26,22 +28,26 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private final int numberOfDoors = 3;
     private int doorWidth, doorHeight;
     private LinearLayout doorsLayout;
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupViewModel();
         setContentView(R.layout.activity_main);
         montyHallGame = new MontyHallGame(this);
         initViews();
 
     }
 
+    private void setupViewModel(){
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+    }
 
     private void initViews(){
         initDoorBorders();
         initDoors();
         doorsLayout = findViewById(R.id.doorsLayout);
-        areDoorDimensionsCalculated = false;
         initDoorDimensions();
         playAgainButton = setupButton(R.id.new_game_button, this::startNewGame);
         resetStatsButton = setupButton(R.id.reset_stats_button, this::resetStats);
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         switchedChoiceStatsTextView = findViewById(R.id.switch_stat_wins_text);
         statusTextView = findViewById(R.id.statusText);
     }
+
 
     private void initDoorDimensions(){
         doorsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -112,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
 
-
     private void resetStats(){
         montyHallGame.resetStats();
         resetStatsButton.setVisibility(View.INVISIBLE);
@@ -152,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         displayLoseMessage();
     }
 
-    private boolean areDoorDimensionsCalculated;
 
     @Override
     public void updateStatistics(String switchChoiceStats, String keepChoiceStats){
@@ -165,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private void setDimensionsOnDoors(){
         setDoorDimensions();
     }
+
 
     private void setDoorDimensions(){
         log("^^^ setDimensionsOnDoors()");

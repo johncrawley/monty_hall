@@ -29,7 +29,6 @@
         android:weightSum="9"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/statusText"
-        app:layout_constraintBottom_toTopOf="@+id/new_game_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:baselineAligned="false">
@@ -94,12 +93,11 @@
         android:id="@+id/new_game_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         android:text="@string/play_again_button_text"
-        app:layout_constraintBottom_toTopOf="@+id/stats_layout"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/doorsLayout" />
 
 
 
@@ -116,9 +114,12 @@
         <LinearLayout
             android:id="@+id/keep_stats_layout"
             android:layout_width="wrap_content"
+            android:minWidth="100dp"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
+            android:background="@drawable/stats_bg"
             android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="vertical">
 
 
@@ -127,8 +128,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/keep_stats_heading"
+                android:textColor="@color/stats_layout_text_color"
                 android:layout_margin="8dp"
                 android:gravity="center"
+                android:textAlignment="center"
                 android:textSize="@dimen/stats_heading_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -137,11 +140,13 @@
 
             <TextView
                 android:id="@+id/keep_stat_wins_text"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/initial_stats"
+                android:textColor="@color/stats_layout_text_color"
                 android:layout_margin="8dp"
                 android:gravity="center"
+                android:textAlignment="center"
                 android:textSize="@dimen/stats_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -154,7 +159,11 @@
         <LinearLayout
             android:id="@+id/switch_stats_layout"
             android:layout_width="wrap_content"
+            android:minWidth="100dp"
+            android:background="@drawable/stats_bg"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:layout_margin="12dp"
             android:orientation="vertical">
 
@@ -164,8 +173,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/switch_stats_heading"
+                android:textColor="@color/stats_layout_text_color"
                 android:layout_margin="8dp"
                 android:gravity="center"
+                android:textAlignment="center"
                 android:textSize="@dimen/stats_heading_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -174,9 +185,10 @@
 
             <TextView
                 android:id="@+id/switch_stat_wins_text"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/initial_stats"
+                android:textColor="@color/stats_layout_text_color"
                 android:layout_margin="8dp"
                 android:gravity="center"
                 android:textSize="@dimen/stats_text_size"
@@ -186,9 +198,7 @@
 
         </LinearLayout>
 
-
     </LinearLayout>
-
 
 
     <Button

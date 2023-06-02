@@ -6,7 +6,7 @@
     <string name="success_status_text">Congratulations!</string>
     <string name="fail_status_text">You lose! Good day sir!</string>
     <string name="play_again_button_text">Play again</string>
-    <string name="reset_stats_button_text">Reset</string>
+    <string name="reset_stats_menu_text">Reset Statistics</string>
     <string name="initial_statistics_text">No statistics yet</string>
     <string name="keep_stats_heading">Keep</string>
     <string name="switch_stats_heading">Switch</string>

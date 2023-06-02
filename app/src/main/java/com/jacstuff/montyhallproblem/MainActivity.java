@@ -1,10 +1,12 @@
 package com.jacstuff.montyhallproblem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private List<View> doors;
     private View door1Border, door2Border, door3Border;
     private List<View> doorBorders;
-    private Button playAgainButton, resetStatsButton;
+    private Button playAgainButton;
     private TextView keptChoiceStatsTextView, switchedChoiceStatsTextView;
     private TextView statusTextView;
     private MontyHallGame montyHallGame;
@@ -40,6 +42,24 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_buttons, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.menu_button_reset_statistics) {
+            resetStats();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private void setupViewModel(){
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
@@ -50,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         doorsLayout = findViewById(R.id.doorsLayout);
         initDoorDimensions();
         playAgainButton = setupButton(R.id.new_game_button, this::startNewGame);
-        resetStatsButton = setupButton(R.id.reset_stats_button, this::resetStats);
         keptChoiceStatsTextView = findViewById(R.id.keep_stat_wins_text);
         switchedChoiceStatsTextView = findViewById(R.id.switch_stat_wins_text);
         statusTextView = findViewById(R.id.statusText);
@@ -121,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private void resetStats(){
         montyHallGame.resetStats();
-        resetStatsButton.setVisibility(View.INVISIBLE);
     }
 
 
@@ -163,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void updateStatistics(String switchChoiceStats, String keepChoiceStats){
         keptChoiceStatsTextView.setText(keepChoiceStats);
         switchedChoiceStatsTextView.setText(switchChoiceStats);
-        resetStatsButton.setVisibility(View.VISIBLE);
     }
 
 
